@@ -37128,6 +37128,7 @@ struct ej_handler ej_handlers[] = {
 #endif
 #ifdef RTCONFIG_BWDPI
 	{ "bwdpi_conntrack", ej_bwdpi_conntrack},
+	{ "get_tcfilter_array", ej_tcfilter_array},
 #endif
 	{ "bandwidth", ej_bandwidth},
 #ifdef RTCONFIG_DSL
