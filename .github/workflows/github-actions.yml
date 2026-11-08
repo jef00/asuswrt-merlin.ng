@@ -213,6 +213,9 @@ jobs:
       steps:
         - name: Download packages
           uses: actions/download-artifact@v8
+          with:
+            path: dist
+            merge-multiple: true
         - name: Get release version
           run: |
             echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
@@ -221,10 +224,11 @@ jobs:
           uses: softprops/action-gh-release@v3
           with:
             tag_name: ${{ env.version }}
-            body_path: /home/runner/work/asuswrt-merlin.ng/asuswrt-merlin.ng/release-rt-ax95q-default/CHANGELOG
+            body_path: dist/CHANGELOG
             draft: true
             prerelease: ${{ env.prerelease }}
-            files: /home/runner/work/asuswrt-merlin.ng/asuswrt-merlin.ng/release*/*
+            files: dist/*
+            fail_on_unmatched_files: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
@@ -246,10 +250,13 @@ jobs:
             git config --global push.default simple
         - name: Download packages
           uses: actions/download-artifact@v8
+          with:
+            path: dist
+            merge-multiple: true
         - name: "Publish Manifest"
           env:
             UPDATE_DIR: "updates"
-            CHANGELOG_FILE: "release-rt-ax95q-default/CHANGELOG"
+            CHANGELOG_FILE: "dist/CHANGELOG"
           run: |
             export CIRCLE_TAG="${GITHUB_REF#refs/*/}"
             MAJOR_VER=$(echo "${CIRCLE_TAG}" | sed -E 's/([0-9.]*)[_-]?(.*)/\1/')
